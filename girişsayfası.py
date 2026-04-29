@@ -51,8 +51,9 @@ class LoginPage(QWidget):
             }}
             QLabel#title {{
                 color: {self.colors['text_primary']};
-                font: 700 28px 'Segoe UI';
-                letter-spacing: 2px;
+                font: 700 26px 'Segoe UI';
+                letter-spacing: 1px;
+                padding: 0 8px;
             }}
             QLabel#subtitle {{
                 color: {self.colors['text_secondary']};
@@ -102,7 +103,7 @@ class LoginPage(QWidget):
         card = QFrame()
         self.card = card
         card.setObjectName("loginCard")
-        card.setFixedWidth(560)
+        card.setFixedWidth(620)
         card_layout = QVBoxLayout(card)
         card_layout.setContentsMargins(40, 32, 40, 34)
         card_layout.setSpacing(14)
@@ -116,10 +117,11 @@ class LoginPage(QWidget):
 
         title = QLabel("GÖKTİGİN HAVACILIK TAKIMLARI")
         title.setObjectName("title")
+        title.setContentsMargins(12, 0, 12, 0)
         title.setAlignment(Qt.AlignCenter)
         card_layout.addWidget(title)
 
-        subtitle = QLabel("DEEP SPACE GROUND CONTROL")
+        subtitle = QLabel("YER KONTROL İSTASYONU")
         subtitle.setObjectName("subtitle")
         subtitle.setAlignment(Qt.AlignCenter)
         card_layout.addWidget(subtitle)

@@ -1,6 +1,7 @@
 import sys
 import math
 import random
+from pathlib import Path
 from datetime import datetime
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
@@ -495,9 +496,7 @@ class GroundStation(QMainWindow):
         super().__init__()
         self.setWindowTitle("GökTigin Ground Station — TEKNOFEST 2025")
         self.setMinimumSize(1280, 780)
-        self.logo_path = (
-            r"C:\Users\Acer\.cursor\projects\c-Users-Acer-OneDrive-Desktop-deneme\assets\c__Users_Acer_AppData_Roaming_Cursor_User_workspaceStorage_5586babad2924fabad38f53e1f4af2a6_images_image-75a32522-e95c-4ea2-a86a-4c64f6e6cb5b.png"
-        )
+        self.logo_path = str(Path(__file__).resolve().parent / "fotoğraflar" / "logo.png")
 
         # Genel arka plan
         self.setStyleSheet(f"QMainWindow, QWidget {{ background: {COLORS['bg_primary']}; }}")
