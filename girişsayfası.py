@@ -7,6 +7,11 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QLabel, QLineEdit, QPu
 
 
 class LoginPage(QWidget):
+    # Basit kullanıcı veritabanı
+    USERS = {
+        "admin": "1234"
+    }
+
     def __init__(self, on_login, logo_path, colors):
         super().__init__()
         self.on_login = on_login
@@ -154,11 +159,18 @@ class LoginPage(QWidget):
     def _try_login(self):
         username = self.user_input.text().strip()
         password = self.pass_input.text().strip()
+        
         if not username or not password:
             self.status_lbl.setText("Kullanıcı adı ve şifre zorunludur.")
             return
-        self.status_lbl.setText("")
-        self.on_login()
+        
+        # Kullanıcı doğrulama
+        if username in self.USERS and self.USERS[username] == password:
+            self.status_lbl.setText("")
+            self.on_login(True, username)  # Başarılı giriş
+        else:
+            self.status_lbl.setText("Kullanıcı adı veya şifre hatalı.")
+            self.pass_input.clear()
 
     def paintEvent(self, event):
         p = QPainter(self)
