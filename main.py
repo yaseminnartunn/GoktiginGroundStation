@@ -606,14 +606,15 @@ class GroundStation(QMainWindow):
         page_layout.addWidget(self.status_bar_widget)
         return page
 
-    def show_dashboard(self):
-        self.stack.setCurrentWidget(self.dashboard_page)
-        if self.sim is None:
-            self.sim = TelemetrySimulator()
-            self.sim.data_received.connect(self.on_data)
-            self.sim.start()
-        if not self.anim_timer.isActive():
-            self.anim_timer.start(50)
+    def show_dashboard(self, success, username=None):
+        if success:
+            self.stack.setCurrentWidget(self.dashboard_page)
+            if self.sim is None:
+                self.sim = TelemetrySimulator()
+                self.sim.data_received.connect(self.on_data)
+                self.sim.start()
+            if not self.anim_timer.isActive():
+                self.anim_timer.start(50)
 
     def on_data(self, data):
         self.top_bar.update_data(data)
