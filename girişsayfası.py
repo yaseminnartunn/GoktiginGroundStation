@@ -50,8 +50,12 @@ class LoginPage(QWidget):
                 background: transparent;
             }}
             QFrame#loginCard {{
-                background: rgba(8, 21, 41, 200);
-                border: 1px solid rgba(0, 212, 255, 170);
+                background: qlineargradient(
+                    x1: 0, y1: 0, x2: 1, y2: 1,
+                    stop: 0 rgba(7, 20, 42, 225),
+                    stop: 1 rgba(10, 32, 58, 215)
+                );
+                border: 1px solid rgba(0, 235, 255, 175);
                 border-radius: 18px;
             }}
             QLabel#title {{
@@ -95,7 +99,11 @@ class LoginPage(QWidget):
                 padding: 12px 14px;
             }}
             QPushButton:hover {{
-                background: #7CF4FF;
+                background: qlineargradient(
+                    x1: 0, y1: 0, x2: 1, y2: 0,
+                    stop: 0 #5CE9FF,
+                    stop: 1 #9DF8FF
+                );
             }}
         """
         )
@@ -157,20 +165,23 @@ class LoginPage(QWidget):
         root.addWidget(card)
 
     def _try_login(self):
-        username = self.user_input.text().strip()
-        password = self.pass_input.text().strip()
-        
-        if not username or not password:
-            self.status_lbl.setText("Kullanıcı adı ve şifre zorunludur.")
-            return
-        
-        # Kullanıcı doğrulama
-        if username in self.USERS and self.USERS[username] == password:
-            self.status_lbl.setText("")
-            self.on_login(True, username)  # Başarılı giriş
-        else:
-            self.status_lbl.setText("Kullanıcı adı veya şifre hatalı.")
-            self.pass_input.clear()
+        username = self.user_input.text().strip() or "geliştirici"
+
+        # ── GELİŞTİRME MODU: Şifre kontrolü devre dışı ──
+        # Tekrar aktif etmek için aşağıdaki satırları yorum dışına alın:
+        # password = self.pass_input.text().strip()
+        # if not username or not password:
+        #     self.status_lbl.setText("Kullanıcı adı ve şifre zorunludur.")
+        #     return
+        # if username in self.USERS and self.USERS[username] == password:
+        #     self.status_lbl.setText("")
+        #     self.on_login(True, username)
+        # else:
+        #     self.status_lbl.setText("Kullanıcı adı veya şifre hatalı.")
+        #     self.pass_input.clear()
+
+        self.status_lbl.setText("")
+        self.on_login(True, username)  # Doğrudan giriş
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -178,8 +189,26 @@ class LoginPage(QWidget):
         w = self.width()
         h = self.height()
 
-        # Tek renk (acik ton) uzay arkaplani
-        p.fillRect(self.rect(), QColor("#032A47"))
+        # Katmanli uzay arkaplani
+        bg = QLinearGradient(0, 0, 0, h)
+        bg.setColorAt(0.0, QColor("#03172E"))
+        bg.setColorAt(0.45, QColor("#052846"))
+        bg.setColorAt(1.0, QColor("#021322"))
+        p.fillRect(self.rect(), bg)
+
+        # Nebula / isik bulutlari
+        nebula_1 = QRadialGradient(w * 0.15, h * 0.2, min(w, h) * 0.35)
+        nebula_1.setColorAt(0.0, QColor(60, 130, 255, 70))
+        nebula_1.setColorAt(1.0, QColor(60, 130, 255, 0))
+        p.setPen(Qt.NoPen)
+        p.setBrush(QBrush(nebula_1))
+        p.drawEllipse(int(w * -0.2), int(h * -0.1), int(w * 0.7), int(h * 0.6))
+
+        nebula_2 = QRadialGradient(w * 0.88, h * 0.14, min(w, h) * 0.3)
+        nebula_2.setColorAt(0.0, QColor(0, 235, 255, 65))
+        nebula_2.setColorAt(1.0, QColor(0, 235, 255, 0))
+        p.setBrush(QBrush(nebula_2))
+        p.drawEllipse(int(w * 0.55), int(h * -0.15), int(w * 0.6), int(h * 0.55))
 
         # Yıldız katmanı (deterministik dağılım)
         for x_ratio, y_ratio, radius, phase, base_alpha in self._stars:
@@ -191,9 +220,27 @@ class LoginPage(QWidget):
             p.setBrush(QColor(185, 225, 255, alpha))
             p.drawEllipse(x, y, int(radius), int(radius))
 
+        # Hafif yoresel cizgiler
+        p.setBrush(Qt.NoBrush)
+        p.setPen(QPen(QColor(80, 180, 255, 30), 1))
+        p.drawEllipse(int(w * -0.15), int(h * 0.62), int(w * 0.85), int(h * 0.4))
+        p.drawEllipse(int(w * 0.45), int(h * 0.68), int(w * 0.7), int(h * 0.36))
+
         # Login karti uzerinde scan-line efekti
         if hasattr(self, "card"):
             card_rect = self.card.geometry()
+            halo = QRadialGradient(card_rect.center().x(), card_rect.center().y(), card_rect.width() * 0.75)
+            halo.setColorAt(0.0, QColor(0, 220, 255, 42))
+            halo.setColorAt(1.0, QColor(0, 220, 255, 0))
+            p.setPen(Qt.NoPen)
+            p.setBrush(QBrush(halo))
+            p.drawEllipse(card_rect.adjusted(-52, -44, 52, 44))
+
+            pulse = 90 + int(45 * (0.5 + 0.5 * math.sin(self._anim_phase * 1.2)))
+            p.setBrush(Qt.NoBrush)
+            p.setPen(QPen(QColor(0, 225, 255, pulse), 1))
+            p.drawRoundedRect(card_rect.adjusted(-2, -2, 2, 2), 20, 20)
+
             if card_rect.height() > 24:
                 travel = card_rect.height() - 24
                 y_offset = int(((math.sin(self._anim_phase * 0.7) + 1) / 2) * travel)

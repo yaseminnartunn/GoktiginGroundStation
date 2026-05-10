@@ -1,0 +1,18 @@
+COLORS = {
+    "bg_primary":    "#050A14",
+    "bg_secondary":  "#0A1628",
+    "bg_card":       "#0D1F3C",
+    "bg_card_hover": "#112547",
+    "accent_cyan":   "#00D4FF",
+    "accent_green":  "#00FF9C",
+    "accent_orange": "#FF6B35",
+    "accent_red":    "#FF2D55",
+    "accent_yellow": "#FFD700",
+    "accent_purple": "#BD00FF",
+    "accent_tech_blue": "#00AEEF",
+    "text_primary":  "#E8F4FD",
+    "text_secondary":"#7BA3C8",
+    "text_dim":      "#3A5A7A",
+    "border_glow":   "#1A3A5C",
+    "grid_line":     "#0F2040",
+}
