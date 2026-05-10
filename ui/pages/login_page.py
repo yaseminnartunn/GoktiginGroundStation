@@ -2,9 +2,8 @@ import math
 import random
 
 from PyQt5.QtCore import Qt, QRect, QTimer
-from PyQt5.QtGui import QPixmap, QColor, QPainter, QPen, QLinearGradient, QRadialGradient, QBrush
+from PyQt5.QtGui import QPixmap, QColor, QPainter, QPen, QLinearGradient
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QLabel, QLineEdit, QPushButton
-
 
 class LoginPage(QWidget):
     # Basit kullanıcı veritabanı
@@ -107,7 +106,7 @@ class LoginPage(QWidget):
         card = QFrame()
         self.card = card
         card.setObjectName("loginCard")
-        card.setFixedWidth(560)
+        card.setFixedWidth(640)
         card_layout = QVBoxLayout(card)
         card_layout.setContentsMargins(40, 32, 40, 34)
         card_layout.setSpacing(14)
