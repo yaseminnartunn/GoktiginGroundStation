@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from ui.widgets.rocket_widget import RocketWidget
 from ui.widgets.circular_gauge import CircularGauge
 from ui.widgets.sensor_card import SensorCard
-from ui.widgets.panels import GPSPanel, BatteryPanel
+from ui.widgets.panels import GPSPanel
 from ui.styles import COLORS, DATA_COLORS
 
 class DashboardPage(QWidget):
@@ -27,9 +27,6 @@ class DashboardPage(QWidget):
         self.gps_panel = GPSPanel()
         left_panel.addWidget(self.gps_panel)
 
-        self.battery_panel = BatteryPanel()
-        left_panel.addWidget(self.battery_panel)
-
         left_panel.addStretch()
         content_layout.addLayout(left_panel)
 
@@ -37,7 +34,7 @@ class DashboardPage(QWidget):
         center_panel = QVBoxLayout()
         center_panel.setSpacing(10)
 
-        # Üst satır: Hız | İrtifa | Sıcaklık | Basınç
+        # Satır 1: Hız | İrtifa | Sıcaklık | Basınç
         row1 = QHBoxLayout()
         row1.setSpacing(10)
         self.card_velocity    = SensorCard("HIZ",      "m/s",  DATA_COLORS["HIZ (m/s)"])
@@ -48,15 +45,29 @@ class DashboardPage(QWidget):
             row1.addWidget(card)
         center_panel.addLayout(row1)
 
-        # Alt satır: İvme X | İvme Y | İvme Z
+        # Satır 2: İvme X | İvme Y | İvme Z | Dikey Hız
         row2 = QHBoxLayout()
         row2.setSpacing(10)
         self.card_accel_x = SensorCard("İVME X", "m/s²", DATA_COLORS["İVME X (m/s²)"])
         self.card_accel_y = SensorCard("İVME Y", "m/s²", DATA_COLORS["İVME Y (m/s²)"])
         self.card_accel_z = SensorCard("İVME Z", "m/s²", DATA_COLORS["İVME Z (m/s²)"])
-        for card in [self.card_accel_x, self.card_accel_y, self.card_accel_z]:
+        self.card_vertical_velocity = SensorCard("DİKEY HIZ", "m/s", DATA_COLORS["DİKEY HIZ (m/s)"])
+        for card in [self.card_accel_x, self.card_accel_y, self.card_accel_z, self.card_vertical_velocity]:
             row2.addWidget(card)
         center_panel.addLayout(row2)
+
+        # Satır 3: ω X | ω Y | ω Z
+        row3 = QHBoxLayout()
+        row3.setSpacing(10)
+        self.card_gyro_x = SensorCard("ω X", "°/s", DATA_COLORS["ω X (°/s)"])
+        self.card_gyro_y = SensorCard("ω Y", "°/s", DATA_COLORS["ω Y (°/s)"])
+        self.card_gyro_z = SensorCard("ω Z", "°/s", DATA_COLORS["ω Z (°/s)"])
+        for card in [self.card_gyro_x, self.card_gyro_y, self.card_gyro_z]:
+            row3.addWidget(card)
+        center_panel.addLayout(row3)
+        
+        # Kartların sayfaya yayılması için stretch'i kaldırdık
+
 
         content_layout.addLayout(center_panel, 1)
 
@@ -71,9 +82,8 @@ class DashboardPage(QWidget):
 
         self.gauge_vel = CircularGauge("HIZ",    "m/s", 0, 300,  DATA_COLORS["HIZ (m/s)"])
         self.gauge_alt = CircularGauge("İRTİFA", "m",   0, 3500, DATA_COLORS["İRTİFA (m)"])
-        self.gauge_bat = CircularGauge("BATARYA","%",   0, 100,  COLORS["accent_yellow"])
 
-        for g in [self.gauge_vel, self.gauge_alt, self.gauge_bat]:
+        for g in [self.gauge_vel, self.gauge_alt]:
             right_panel.addWidget(g, 0, Qt.AlignCenter)
 
         right_panel.addStretch()
@@ -88,13 +98,14 @@ class DashboardPage(QWidget):
             self.card_accel_x.update_value("—")
             self.card_accel_y.update_value("—")
             self.card_accel_z.update_value("—")
+            self.card_vertical_velocity.update_value("—")
+            self.card_gyro_x.update_value("—")
+            self.card_gyro_y.update_value("—")
+            self.card_gyro_z.update_value("—")
             self.gps_panel.lat_lbl.setText("—")
             self.gps_panel.lon_lbl.setText("—")
-            self.battery_panel.update_value(0)
-            self.battery_panel.val_lbl.setText("—")
             self.gauge_vel.set_value(0)
             self.gauge_alt.set_value(0)
-            self.gauge_bat.set_value(0)
             self.rocket_widget.set_orientation(0, 0)
             return
             
@@ -106,13 +117,15 @@ class DashboardPage(QWidget):
         self.card_accel_x.update_value(data["accel_x"])
         self.card_accel_y.update_value(data["accel_y"])
         self.card_accel_z.update_value(data["accel_z"])
+        self.card_vertical_velocity.update_value(data["vertical_velocity"])
+        self.card_gyro_x.update_value(data["gyro_x"])
+        self.card_gyro_y.update_value(data["gyro_y"])
+        self.card_gyro_z.update_value(data["gyro_z"])
 
         self.gps_panel.update_data(data["latitude"], data["longitude"])
-        self.battery_panel.update_value(data["battery"])
 
         self.gauge_vel.set_value(data["velocity"])
         self.gauge_alt.set_value(data["altitude"])
-        self.gauge_bat.set_value(data["battery"])
 
         pitch = math.degrees(math.atan2(data["accel_x"], abs(data["accel_z"])))
         roll  = math.degrees(math.atan2(data["accel_y"], abs(data["accel_z"])))

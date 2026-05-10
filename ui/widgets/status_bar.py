@@ -15,10 +15,10 @@ class StatusBar(QFrame):
 
         self.items = {}
         for key, label, color in [
-            ("ALT",  "ALT",  DATA_COLORS["İRTİFA (m)"]),
-            ("VEL",  "VEL",  DATA_COLORS["HIZ (m/s)"]),
-            ("RSSI", "RSSI", COLORS["accent_yellow"]),
-            ("KAYIP", "KAYIP", COLORS["accent_orange"]),
+            ("İRTİFA", "İRTİFA", DATA_COLORS["İRTİFA (m)"]),
+            ("HIZ",    "HIZ",    DATA_COLORS["HIZ (m/s)"]),
+            ("SİNYAL", "SİNYAL GÜCÜ", COLORS["accent_yellow"]),
+            ("KAYIP",  "KAYIP",  COLORS["accent_orange"]),
         ]:
             lbl = QLabel(f"{label}  —")
             lbl.setStyleSheet(f"color: {color}; font: 12px 'Segoe UI'; letter-spacing: 1px;")
@@ -37,7 +37,7 @@ class StatusBar(QFrame):
                 lbl.setText(f"{key}  —")
             return
             
-        self.items["ALT"].setText(f"ALT  {data['altitude']:.0f} m")
-        self.items["VEL"].setText(f"VEL  {data['velocity']:.1f} m/s")
-        self.items["RSSI"].setText(f"RSSI  {data['rssi']} dBm")
-        self.items["KAYIP"].setText(f"KAYIP  {data['kayip']:.2f}%")
+        self.items["İRTİFA"].setText(f"İRTİFA  {data['altitude']:.0f} m")
+        self.items["HIZ"].setText(f"HIZ  {data['velocity']:.1f} m/s")
+        self.items["SİNYAL"].setText(f"SİNYAL GÜCÜ  {data['sinyal_gücü']} dBm")
+        self.items["KAYIP"].setText(f"KAYIP  {data['paket_kaybi']:.2f}%")

@@ -33,7 +33,7 @@ class TopBar(QFrame):
             layout.addWidget(self.toggle_btn)
 
         # Logo
-        logo = QLabel("⬡  GÖKTİGİN GROUND STATION")
+        logo = QLabel("⬡ GÖKTİGİN YER İSTASYONU")
         logo.setStyleSheet(f"color: {COLORS['accent_cyan']}; font: 700 13px 'Segoe UI'; letter-spacing: 3px;")
         layout.addWidget(logo)
 
@@ -41,7 +41,7 @@ class TopBar(QFrame):
 
         # Status göstergeleri
         self.status_items = {}
-        for key, label in [("PKT", "PKT"), ("DELAY", "DELAY"), ("RSSI", "RSSI"), ("KAYIP", "KAYIP")]:
+        for key, label in [("PAKET", "PAKET"), ("GECİKME", "GECİKME"), ("SİNYAL", "SİNYAL GÜCÜ"), ("KAYIP", "KAYIP")]:
             frame = QFrame()
             frame.setStyleSheet(f"""
                 background: {COLORS['bg_card']};
@@ -63,7 +63,7 @@ class TopBar(QFrame):
         layout.addSpacing(12)
 
         # ARM butonu
-        self.arm_btn = QPushButton("ARMED")
+        self.arm_btn = QPushButton("HAZIR")
         self.arm_btn.setFixedSize(90, 32)
         self.arm_btn.setStyleSheet(f"""
             QPushButton {{
@@ -87,15 +87,15 @@ class TopBar(QFrame):
 
     def update_data(self, data):
         if not data:
-            self.status_items["PKT"].setText("—")
-            self.status_items["DELAY"].setText("—")
-            self.status_items["RSSI"].setText("—")
+            self.status_items["PAKET"].setText("—")
+            self.status_items["GECİKME"].setText("—")
+            self.status_items["SİNYAL"].setText("—")
             self.status_items["KAYIP"].setText("—")
             self.time_lbl.setText("")
             return
             
-        self.status_items["PKT"].setText(str(data["pkt"]))
-        self.status_items["DELAY"].setText("64ms")
-        self.status_items["RSSI"].setText(f"{data['rssi']} dBm")
-        self.status_items["KAYIP"].setText(f"{data['kayip']}%")
+        self.status_items["PAKET"].setText(str(data["paket_no"]))
+        self.status_items["GECİKME"].setText("64ms")
+        self.status_items["SİNYAL"].setText(f"{data['sinyal_gücü']} dBm")
+        self.status_items["KAYIP"].setText(f"{data['paket_kaybi']}%")
         self.time_lbl.setText(data["timestamp"])

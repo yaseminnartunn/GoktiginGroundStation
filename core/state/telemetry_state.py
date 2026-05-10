@@ -10,10 +10,9 @@ class TelemetryState:
     accel_x: float = 0.0
     accel_y: float = 0.0
     accel_z: float = 0.0
-    battery: float = 0.0
     latitude: float = 0.0
     longitude: float = 0.0
-    rssi: float = 0.0
-    pkt: int = 0
-    kayip: float = 0.0
+    sinyal_gücü: float = 0.0
+    paket_no: int = 0
+    paket_kaybi: float = 0.0
     timestamp: str = ""

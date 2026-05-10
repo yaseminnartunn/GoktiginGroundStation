@@ -24,10 +24,13 @@ DATA_COLORS = {
     "İVME X (m/s²)":  "#BD00FF",  # purple
     "İVME Y (m/s²)":  "#FF4FA3",  # pink
     "İVME Z (m/s²)":  "#FF2D55",  # red
-    "BATARYA (%)":    "#00FF9C",  # green
+    "DİKEY HIZ (m/s)":"#00FF9C",  # green
+    "ω X (°/s)":      "#FFD700",  # yellow
+    "ω Y (°/s)":      "#FF6B35",  # orange
+    "ω Z (°/s)":      "#BD00FF",  # purple
     "ENLEM":          "#00D4FF",  # cyan
     "BOYLAM":         "#00D4FF",  # cyan
-    "RSSI (dBm)":     "#7BA3C8",  # gray-blue
+    "SİNYAL GÜCÜ (dBm)": "#7BA3C8",  # gray-blue
     "PAKET":          "#BD00FF",  # purple
     "KAYIP (%)":      "#FF2D55",  # red
     "ZAMAN":          "#7BA3C8",  # gray-blue

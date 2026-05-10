@@ -161,12 +161,15 @@ class DataTablePage(QWidget):
             "İVME X (m/s²)":  data.get("accel_x"),
             "İVME Y (m/s²)":  data.get("accel_y"),
             "İVME Z (m/s²)":  data.get("accel_z"),
-            "BATARYA (%)":    data.get("battery"),
+            "DİKEY HIZ (m/s)":data.get("vertical_velocity"),
+            "ω X (°/s)":      data.get("gyro_x"),
+            "ω Y (°/s)":      data.get("gyro_y"),
+            "ω Z (°/s)":      data.get("gyro_z"),
             "ENLEM":          data.get("latitude"),
             "BOYLAM":         data.get("longitude"),
-            "RSSI (dBm)":     data.get("rssi"),
-            "PAKET":          data.get("pkt"),
-            "KAYIP (%)":      data.get("kayip"),
+            "SİNYAL GÜCÜ (dBm)": data.get("sinyal_gücü"),
+            "PAKET":          data.get("paket_no"),
+            "KAYIP (%)":      data.get("paket_kaybi"),
             "ZAMAN":          data.get("timestamp"),
         }
         
@@ -177,15 +180,15 @@ class DataTablePage(QWidget):
             if value is not None:
                 # Sayısal değerleri formatla
                 if isinstance(value, float):
-                    if param in ["İRTİFA (m)", "HIZ (m/s)", "BASINÇ (hPa)"]:
+                    if param in ["İRTİFA (m)", "HIZ (m/s)", "BASINÇ (hPa)", "DİKEY HIZ (m/s)"]:
                         display_value = f"{value:.1f}"
                     elif param in ["SICAKLIK (°C)"]:
                         display_value = f"{value:.1f}"
-                    elif param in ["İVME X (m/s²)", "İVME Y (m/s²)", "İVME Z (m/s²)"]:
+                    elif param in ["İVME X (m/s²)", "İVME Y (m/s²)", "İVME Z (m/s²)", "ω X (°/s)", "ω Y (°/s)", "ω Z (°/s)"]:
                         display_value = f"{value:.2f}"
                     elif param in ["ENLEM", "BOYLAM"]:
                         display_value = f"{value:.6f}"
-                    elif param in ["RSSI (dBm)"]:
+                    elif param in ["SİNYAL GÜCÜ (dBm)"]:
                         display_value = f"{value:.1f}"
                     elif param in ["KAYIP (%)"]:
                         display_value = f"{value:.1f}"

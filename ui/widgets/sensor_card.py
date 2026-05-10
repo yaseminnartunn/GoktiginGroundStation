@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel, QSizePolicy
 from PyQt5.QtCore import Qt
 from ui.styles import COLORS
 from ui.widgets.mini_graph import MiniGraph
@@ -10,6 +10,7 @@ class SensorCard(QFrame):
         self.color = color
         self._value = 0.0
         self.setObjectName("sensorCard")
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setStyleSheet(f"""
             QFrame#sensorCard {{
                 background: {COLORS['bg_card']};
@@ -24,19 +25,19 @@ class SensorCard(QFrame):
 
         # Başlık
         title_lbl = QLabel(title)
-        title_lbl.setStyleSheet(f"color: {COLORS['text_secondary']}; font: 700 18px 'Segoe UI'; letter-spacing: 2px;")
+        title_lbl.setStyleSheet(f"color: {COLORS['text_secondary']}; font: 700 20px 'Segoe UI'; letter-spacing: 2px;")
         layout.addWidget(title_lbl)
 
         # Değer
         self.val_lbl = QLabel("—")
         self.val_lbl.setAlignment(Qt.AlignCenter)
-        self.val_lbl.setStyleSheet(f"color: {color}; font: 700 36px 'Segoe UI';")
+        self.val_lbl.setStyleSheet(f"color: {color}; font: 700 48px 'Segoe UI';")
         layout.addWidget(self.val_lbl)
 
         # Birim
         unit_lbl = QLabel(unit)
         unit_lbl.setAlignment(Qt.AlignCenter)
-        unit_lbl.setStyleSheet(f"color: {COLORS['text_dim']}; font: 700 14px 'Segoe UI';")
+        unit_lbl.setStyleSheet(f"color: {COLORS['text_dim']}; font: 700 16px 'Segoe UI';")
         layout.addWidget(unit_lbl)
 
         # Mini grafik

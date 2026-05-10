@@ -24,7 +24,7 @@ class SideMenu(QFrame):
         
         self.buttons = {}
         menu_items = [
-            ("dashboard", "📊 Dashboard"),
+            ("dashboard", "📊 Gösterge Paneli"),
             ("veriler", "📋 Telemetri Verileri"),
             ("test", "⚙️ Test ve Simülasyon"),
         ]
