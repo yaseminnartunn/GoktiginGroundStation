@@ -14,3 +14,7 @@ class StateBus(QObject):
     
     # Simülasyon komutları (örn: "start", "stop")
     simulation_command = pyqtSignal(str)
+    
+    # Kayıt aralığı (saniye cinsinden)
+    log_interval_changed = pyqtSignal(float)
+

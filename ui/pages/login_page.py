@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QLabel, QLineEdit, QPu
 class LoginPage(QWidget):
     # Basit kullanıcı veritabanı
     USERS = {
-        "admin": "1234"
+        "a": "a"
     }
 
     def __init__(self, on_login, logo_path, colors):

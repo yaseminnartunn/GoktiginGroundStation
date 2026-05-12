@@ -27,6 +27,7 @@ class SideMenu(QFrame):
             ("dashboard", "📊 Gösterge Paneli"),
             ("veriler", "📋 Telemetri Verileri"),
             ("test", "⚙️ Test ve Simülasyon"),
+            ("seri_ayar", "🔌 Seri Bağlantı Ayarları"),
         ]
         
         for key, label in menu_items:

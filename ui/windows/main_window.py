@@ -8,12 +8,13 @@ from ui.pages.login_page import LoginPage
 from ui.pages.dashboard_page import DashboardPage
 from ui.pages.data_page import DataTablePage
 from ui.pages.test_page import TestPage
+from ui.pages.serial_settings_page import SerialSettingsPage
 
 class MainWindow(QMainWindow):
     def __init__(self, state_bus, logo_path, colors):
         super().__init__()
         self.state_bus = state_bus
-        self.setWindowTitle("GökTigin Ground Station — TEKNOFEST 2025")
+        self.setWindowTitle("GökTigin Ground Station — TEKNOFEST 2026")
         self.setMinimumSize(1280, 780)
         self.setStyleSheet(f"QMainWindow, QWidget {{ background: {COLORS['bg_primary']}; }}")
 
@@ -67,10 +68,15 @@ class MainWindow(QMainWindow):
         self.dashboard_page = DashboardPage()
         self.data_page = DataTablePage()
         self.test_page = TestPage(self.state_bus)
+        self.serial_page = SerialSettingsPage(
+            self.state_bus,
+            go_back_callback=lambda: self.on_menu_click("dashboard")
+        )
 
         self.content_stack.addWidget(self.dashboard_page)
         self.content_stack.addWidget(self.data_page)
         self.content_stack.addWidget(self.test_page)
+        self.content_stack.addWidget(self.serial_page)
 
         right_layout.addWidget(self.content_stack, 1)
 
@@ -107,6 +113,8 @@ class MainWindow(QMainWindow):
             self.content_stack.setCurrentIndex(1)
         elif key == "test":
             self.content_stack.setCurrentIndex(2)
+        elif key == "seri_ayar":
+            self.content_stack.setCurrentIndex(3)
 
     def show_dashboard(self, success, username=None):
         if success:

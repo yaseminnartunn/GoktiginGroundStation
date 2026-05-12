@@ -6,6 +6,7 @@ from PyQt5.QtGui import QFont
 from core.events.state_bus import StateBus
 from tests.mocks.simulator import TelemetrySimulatorProvider
 from core.telemetry.service import TelemetryService
+from core.logging.flight_logger import FlightLogger
 
 # Sunum Katmanı
 from ui.manager import UIManager
@@ -23,10 +24,24 @@ def main():
     # 1. State Bus (Sinyal Sistemi) Başlatılır
     state_bus = StateBus()
 
-    # 2. Telemetri Sağlayıcı ve Servisi Başlatılır
+    # 2. Telemetri Sağlayıcı, Servisi ve Logger Başlatılır
     simulator_provider = TelemetrySimulatorProvider()
     telemetry_service = TelemetryService(simulator_provider, state_bus)
+    flight_logger = FlightLogger()
+
+    # Sinyal Bağlantıları
     state_bus.simulation_command.connect(telemetry_service.handle_simulation_command)
+    state_bus.telemetry_updated.connect(flight_logger.log_telemetry)
+    state_bus.log_interval_changed.connect(flight_logger.set_interval)
+    
+    # Simülasyon komutlarına göre loglama başlat/durdur
+    def handle_logging_commands(cmd):
+        if cmd == "start":
+            flight_logger.start_logging()
+        elif cmd == "stop" or cmd == "clear":
+            flight_logger.stop_logging()
+            
+    state_bus.simulation_command.connect(handle_logging_commands)
 
     # 3. UI Yöneticisi Başlatılır ve Bus'a Bağlanır
     # Not: Mevcut logoda değişiklik yapılmaması için aynı logo_path korundu.

@@ -27,7 +27,7 @@ class StatusBar(QFrame):
 
         layout.addStretch()
 
-        mission_lbl = QLabel("MISSION: TEKNOFEST 2025 | ORTA İRTİFA SINIFI")
+        mission_lbl = QLabel("MISSION: TEKNOFEST 2026 | ORTA İRTİFA SINIFI")
         mission_lbl.setStyleSheet(f"color: {COLORS['text_dim']}; font: 10px 'Segoe UI';")
         layout.addWidget(mission_lbl)
 
