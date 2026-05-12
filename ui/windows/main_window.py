@@ -9,6 +9,7 @@ from ui.pages.dashboard_page import DashboardPage
 from ui.pages.data_page import DataTablePage
 from ui.pages.test_page import TestPage
 from ui.pages.serial_settings_page import SerialSettingsPage
+from ui.pages.map_page import MapPage
 
 class MainWindow(QMainWindow):
     def __init__(self, state_bus, logo_path, colors):
@@ -66,6 +67,7 @@ class MainWindow(QMainWindow):
         self.content_stack = QStackedWidget()
 
         self.dashboard_page = DashboardPage()
+        self.map_page = MapPage(self.state_bus)
         self.data_page = DataTablePage()
         self.test_page = TestPage(self.state_bus)
         self.serial_page = SerialSettingsPage(
@@ -74,6 +76,7 @@ class MainWindow(QMainWindow):
         )
 
         self.content_stack.addWidget(self.dashboard_page)
+        self.content_stack.addWidget(self.map_page)
         self.content_stack.addWidget(self.data_page)
         self.content_stack.addWidget(self.test_page)
         self.content_stack.addWidget(self.serial_page)
@@ -109,12 +112,14 @@ class MainWindow(QMainWindow):
         self.side_menu.set_active(key)
         if key == "dashboard":
             self.content_stack.setCurrentIndex(0)
-        elif key == "veriler":
+        elif key == "harita":
             self.content_stack.setCurrentIndex(1)
-        elif key == "test":
+        elif key == "veriler":
             self.content_stack.setCurrentIndex(2)
-        elif key == "seri_ayar":
+        elif key == "test":
             self.content_stack.setCurrentIndex(3)
+        elif key == "seri_ayar":
+            self.content_stack.setCurrentIndex(4)
 
     def show_dashboard(self, success, username=None):
         if success:
