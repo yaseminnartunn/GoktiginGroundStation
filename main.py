@@ -25,9 +25,11 @@ def main():
     state_bus = StateBus()
 
     # 2. Telemetri Sağlayıcı, Servisi ve Logger Başlatılır
-    simulator_provider = TelemetrySimulatorProvider()
-    telemetry_service = TelemetryService(simulator_provider, state_bus)
+    from core.telemetry.providers.serial_port import SerialPortProvider
+    serial_provider = SerialPortProvider(baudrate=9600)
+    telemetry_service = TelemetryService(serial_provider, state_bus)
     flight_logger = FlightLogger()
+
 
     # Sinyal Bağlantıları
     state_bus.simulation_command.connect(telemetry_service.handle_simulation_command)

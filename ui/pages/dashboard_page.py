@@ -1,3 +1,5 @@
+import math
+import time
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QStackedWidget, QLabel
 from PyQt5.QtCore import Qt
 from ui.widgets.rocket_widget import RocketWidget
@@ -9,6 +11,12 @@ from ui.styles import COLORS, DATA_COLORS
 class DashboardPage(QWidget):
     def __init__(self):
         super().__init__()
+        # Oryantasyon Filtre Değişkenleri
+        self.current_pitch = 0.0
+        self.current_roll = 0.0
+        self.last_time = time.time()
+        self.alpha = 0.96 # Filtre Katsayısı (Gyro ağırlığı)
+        
         self._setup_ui()
 
     def _setup_ui(self):
@@ -109,7 +117,6 @@ class DashboardPage(QWidget):
             self.rocket_widget.set_orientation(0, 0)
             return
             
-        import math
         self.card_velocity.update_value(data["velocity"])
         self.card_altitude.update_value(data["altitude"])
         self.card_temperature.update_value(data["temperature"])
@@ -117,16 +124,34 @@ class DashboardPage(QWidget):
         self.card_accel_x.update_value(data["accel_x"])
         self.card_accel_y.update_value(data["accel_y"])
         self.card_accel_z.update_value(data["accel_z"])
-        self.card_vertical_velocity.update_value(data["vertical_velocity"])
-        self.card_gyro_x.update_value(data["gyro_x"])
-        self.card_gyro_y.update_value(data["gyro_y"])
-        self.card_gyro_z.update_value(data["gyro_z"])
+        self.card_vertical_velocity.update_value(data.get("vertical_velocity", 0))
+        self.card_gyro_x.update_value(data.get("gyro_x", 0))
+        self.card_gyro_y.update_value(data.get("gyro_y", 0))
+        self.card_gyro_z.update_value(data.get("gyro_z", 0))
 
         self.gps_panel.update_data(data["latitude"], data["longitude"])
 
         self.gauge_vel.set_value(data["velocity"])
         self.gauge_alt.set_value(data["altitude"])
 
-        pitch = math.degrees(math.atan2(data["accel_x"], abs(data["accel_z"])))
-        roll  = math.degrees(math.atan2(data["accel_y"], abs(data["accel_z"])))
-        self.rocket_widget.set_orientation(pitch, roll * 0.3)
+        # ── 3D Oryantasyon Hesaplama (Complementary Filter) ──
+        now = time.time()
+        dt = now - self.last_time
+        self.last_time = now
+
+        # 1. İvmeölçer ile statik açıları hesapla
+        acc_pitch = math.degrees(math.atan2(data["accel_x"], abs(data["accel_z"])))
+        acc_roll  = math.degrees(math.atan2(data["accel_y"], abs(data["accel_z"])))
+
+        # 2. Jiroskop verisini işle (Radyan -> Derece)
+        gyro_pitch_rate = math.degrees(data.get("gyro_x", 0))
+        gyro_roll_rate  = math.degrees(data.get("gyro_y", 0))
+
+        # 3. Filtre Uygula: Açı = alpha * (Açı + Jiroskop*dt) + (1-alpha) * İvme
+        self.current_pitch = self.alpha * (self.current_pitch + gyro_pitch_rate * dt) + (1 - self.alpha) * acc_pitch
+        self.current_roll  = self.alpha * (self.current_roll + gyro_roll_rate * dt) + (1 - self.alpha) * acc_roll
+
+        # 4. Widget'ı Güncelle
+        self.rocket_widget.set_orientation(self.current_pitch, self.current_roll * 0.5)
+
+
