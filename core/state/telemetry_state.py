@@ -15,4 +15,7 @@ class TelemetryState:
     sinyal_gücü: float = 0.0
     paket_no: int = 0
     paket_kaybi: float = 0.0
+    velocity_kalman: float = 0.0
+    altitude_kalman: float = 0.0
+    vertical_velocity_kalman: float = 0.0
     timestamp: str = ""

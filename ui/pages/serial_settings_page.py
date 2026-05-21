@@ -84,8 +84,25 @@ class SerialSettingsPage(QWidget):
 
     def _tick(self): self.time_lbl.setText(QTime.currentTime().toString("HH:mm:ss") + " UTC")
 
-    def _on_connect(self): self.status_label.setText("● ÇEVRİMİÇİ"); self.status_label.setStyleSheet(f"color:{C['accent_green']}; font:700 14px 'Segoe UI';")
-    def _on_disconnect(self): self.status_label.setText("● ÇEVRİMDIŞI"); self.status_label.setStyleSheet(f"color:{C['accent_red']}; font:700 14px 'Segoe UI';")
+    def _on_connect(self):
+        port_raw = self.config_card.combo_port.currentText()
+        if not port_raw or port_raw == "Cihaz Bulunamadı":
+            QMessageBox.warning(self, "Hata", "Lütfen geçerli bir seri port seçin!")
+            return
+        port = port_raw.split()[0]
+        try:
+            baudrate = int(self.config_card.combo_baudrate.currentText())
+        except ValueError:
+            baudrate = 9600
+        
+        self.status_label.setText("● ÇEVRİMİÇİ")
+        self.status_label.setStyleSheet(f"color:{C['accent_green']}; font:700 14px 'Segoe UI';")
+        self.state_bus.connect_serial.emit(port, baudrate)
+
+    def _on_disconnect(self):
+        self.status_label.setText("● ÇEVRİMDIŞI")
+        self.status_label.setStyleSheet(f"color:{C['accent_red']}; font:700 14px 'Segoe UI';")
+        self.state_bus.disconnect_serial.emit()
 
     def _manual_download(self):
         d = "data/flights"; fs = [f for f in os.listdir(d) if f.endswith(".csv")] if os.path.exists(d) else []

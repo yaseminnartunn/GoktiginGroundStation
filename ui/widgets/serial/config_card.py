@@ -60,7 +60,8 @@ class ConfigCard(QWidget):
         r1a.addLayout(self._field("PORT SEÇİMİ (AUTO-SCAN)", QWidget()), 1) # Placeholder layout
         r1a.itemAt(r1a.count()-1).layout().addWidget(self.combo_port) # Fix layout later if needed
         # Overwriting for better logic
-        r1a.addLayout(self._field("BAUD HIZI", self._combo(["9600", "57600", "115200"], "9600")), 1)
+        self.combo_baudrate = self._combo(["9600", "57600", "115200"], "9600")
+        r1a.addLayout(self._field("BAUD HIZI", self.combo_baudrate), 1)
         r1a.addLayout(self._field("STOP BITS & PARITY", self._combo(["8N1", "8E1", "8O1", "7N1"], "8N1")), 1)
         ly1.addLayout(r1a)
         

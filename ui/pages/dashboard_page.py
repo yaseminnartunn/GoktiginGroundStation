@@ -9,6 +9,7 @@ from ui.styles import COLORS, DATA_COLORS
 class DashboardPage(QWidget):
     def __init__(self):
         super().__init__()
+        self.kalman_enabled = True
         self._setup_ui()
 
     def _setup_ui(self):
@@ -33,6 +34,42 @@ class DashboardPage(QWidget):
         # ── ORTA PANEL: Sensor kartları ──
         center_panel = QVBoxLayout()
         center_panel.setSpacing(10)
+
+        # Filtre Kontrol Barı
+        filter_bar = QHBoxLayout()
+        filter_bar.setContentsMargins(5, 5, 5, 5)
+        
+        panel_title = QLabel("UÇUŞ ENSTRÜMANLARI")
+        panel_title.setStyleSheet(f"color: {COLORS['text_primary']}; font: 700 13px 'Segoe UI'; letter-spacing: 2px;")
+        filter_bar.addWidget(panel_title)
+        filter_bar.addStretch()
+
+        from PyQt5.QtWidgets import QPushButton
+        self.btn_kalman_toggle = QPushButton("Kalman Filtresi: AÇIK")
+        self.btn_kalman_toggle.setCheckable(True)
+        self.btn_kalman_toggle.setChecked(True)
+        self.btn_kalman_toggle.setFixedSize(160, 28)
+        self.btn_kalman_toggle.setCursor(Qt.PointingHandCursor)
+        self.btn_kalman_toggle.setStyleSheet(f"""
+            QPushButton {{
+                background: {COLORS['bg_card']};
+                color: {COLORS['text_secondary']};
+                border: 1px solid {COLORS['border_glow']};
+                border-radius: 6px;
+                font: 700 11px 'Segoe UI';
+            }}
+            QPushButton:checked {{
+                background: rgba(0, 212, 255, 0.15);
+                color: {COLORS['accent_cyan']};
+                border: 1px solid {COLORS['accent_cyan']};
+            }}
+            QPushButton:hover {{
+                border: 1px solid {COLORS['accent_cyan']};
+            }}
+        """)
+        self.btn_kalman_toggle.toggled.connect(self._on_kalman_toggled)
+        filter_bar.addWidget(self.btn_kalman_toggle)
+        center_panel.addLayout(filter_bar)
 
         # Satır 1: Hız | İrtifa | Sıcaklık | Basınç
         row1 = QHBoxLayout()
@@ -89,6 +126,13 @@ class DashboardPage(QWidget):
         right_panel.addStretch()
         content_layout.addLayout(right_panel)
 
+    def _on_kalman_toggled(self, checked):
+        self.kalman_enabled = checked
+        if checked:
+            self.btn_kalman_toggle.setText("Kalman Filtresi: AÇIK")
+        else:
+            self.btn_kalman_toggle.setText("Kalman Filtresi: KAPALI")
+
     def update_data(self, data):
         if not data:
             self.card_velocity.update_value("—")
@@ -110,22 +154,33 @@ class DashboardPage(QWidget):
             return
             
         import math
-        self.card_velocity.update_value(data["velocity"])
-        self.card_altitude.update_value(data["altitude"])
+        
+        # Kalman toggled values
+        if self.kalman_enabled:
+            vel = data.get("velocity_kalman", data["velocity"])
+            alt = data.get("altitude_kalman", data["altitude"])
+            v_vel = data.get("vertical_velocity_kalman", data["vertical_velocity"])
+        else:
+            vel = data["velocity"]
+            alt = data["altitude"]
+            v_vel = data["vertical_velocity"]
+
+        self.card_velocity.update_value(vel)
+        self.card_altitude.update_value(alt)
         self.card_temperature.update_value(data["temperature"])
         self.card_pressure.update_value(data["pressure"])
         self.card_accel_x.update_value(data["accel_x"])
         self.card_accel_y.update_value(data["accel_y"])
         self.card_accel_z.update_value(data["accel_z"])
-        self.card_vertical_velocity.update_value(data["vertical_velocity"])
+        self.card_vertical_velocity.update_value(v_vel)
         self.card_gyro_x.update_value(data["gyro_x"])
         self.card_gyro_y.update_value(data["gyro_y"])
         self.card_gyro_z.update_value(data["gyro_z"])
 
         self.gps_panel.update_data(data["latitude"], data["longitude"])
 
-        self.gauge_vel.set_value(data["velocity"])
-        self.gauge_alt.set_value(data["altitude"])
+        self.gauge_vel.set_value(vel)
+        self.gauge_alt.set_value(alt)
 
         pitch = math.degrees(math.atan2(data["accel_x"], abs(data["accel_z"])))
         roll  = math.degrees(math.atan2(data["accel_y"], abs(data["accel_z"])))

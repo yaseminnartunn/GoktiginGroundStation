@@ -18,3 +18,7 @@ class StateBus(QObject):
     # Kayıt aralığı (saniye cinsinden)
     log_interval_changed = pyqtSignal(float)
 
+    # Seri port bağlantı sinyalleri
+    connect_serial = pyqtSignal(str, int)  # port, baudrate
+    disconnect_serial = pyqtSignal()
+

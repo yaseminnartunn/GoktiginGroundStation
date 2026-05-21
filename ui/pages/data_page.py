@@ -155,13 +155,16 @@ class DataTablePage(QWidget):
         # Veri eşlemesi
         param_map = {
             "HIZ (m/s)":      data.get("velocity"),
+            "HIZ (Kalman) (m/s)": data.get("velocity_kalman"),
             "İRTİFA (m)":     data.get("altitude"),
+            "İRTİFA (Kalman) (m)": data.get("altitude_kalman"),
             "SICAKLIK (°C)":  data.get("temperature"),
             "BASINÇ (hPa)":   data.get("pressure"),
             "İVME X (m/s²)":  data.get("accel_x"),
             "İVME Y (m/s²)":  data.get("accel_y"),
             "İVME Z (m/s²)":  data.get("accel_z"),
             "DİKEY HIZ (m/s)":data.get("vertical_velocity"),
+            "DİKEY HIZ (Kalman) (m/s)": data.get("vertical_velocity_kalman"),
             "ω X (°/s)":      data.get("gyro_x"),
             "ω Y (°/s)":      data.get("gyro_y"),
             "ω Z (°/s)":      data.get("gyro_z"),
@@ -180,7 +183,7 @@ class DataTablePage(QWidget):
             if value is not None:
                 # Sayısal değerleri formatla
                 if isinstance(value, float):
-                    if param in ["İRTİFA (m)", "HIZ (m/s)", "BASINÇ (hPa)", "DİKEY HIZ (m/s)"]:
+                    if param in ["İRTİFA (m)", "İRTİFA (Kalman) (m)", "HIZ (m/s)", "HIZ (Kalman) (m/s)", "BASINÇ (hPa)", "DİKEY HIZ (m/s)", "DİKEY HIZ (Kalman) (m/s)"]:
                         display_value = f"{value:.1f}"
                     elif param in ["SICAKLIK (°C)"]:
                         display_value = f"{value:.1f}"
