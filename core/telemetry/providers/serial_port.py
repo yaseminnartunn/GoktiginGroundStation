@@ -14,7 +14,7 @@ class SerialPortProvider:
         """Seri port bağlantısını açar"""
         self.disconnect() # Eğer açık bağlantı varsa kapat
         try:
-            self.serial_conn = serial.Serial(self.port, self.baudrate, timeout=0.5)
+            self.serial_conn = serial.Serial(self.port, self.baudrate, timeout=0.2)
             # Giriş tamponunu temizle
             self.serial_conn.reset_input_buffer()
             print(f"Seri port bağlandı: {self.port} @ {self.baudrate}")

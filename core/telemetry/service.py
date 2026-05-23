@@ -18,7 +18,7 @@ class TelemetryService(QThread):
         
         # Kalman Filtreleri
         from core.telemetry.processing.kalman import KalmanFilter1D
-        self.kalman_altitude = KalmanFilter1D(process_noise=0.1, measurement_noise=100.0, estimated_error=1.0)
+        self.kalman_altitude = KalmanFilter1D(process_noise=0.1, measurement_noise=1.0, estimated_error=1.0)
         self.kalman_velocity = KalmanFilter1D(process_noise=0.05, measurement_noise=4.0, estimated_error=1.0)
         self.kalman_vertical_velocity = KalmanFilter1D(process_noise=0.05, measurement_noise=1.0, estimated_error=1.0)
         
@@ -78,9 +78,19 @@ class TelemetryService(QThread):
                     data["vertical_velocity_kalman"] = round(self.kalman_vertical_velocity.update(data["vertical_velocity"]), 1)
                     data["vertical_velocity"] = data["vertical_velocity_kalman"]
             
-                # Veriyi StateBus üzerinden yayınla
-                self.state_bus.telemetry_updated.emit(data)
-            time.sleep(0.1)
+                # KESİN ÇÖZÜM: Arayüz Güncelleme Hız Sınırlayıcı (Gecikmeyi Sıfırlar)
+                # Eğer Arduino saniyede 100 paket gönderirse, arayüz çizimi (grafikler vb.)
+                # yetişemez ve gecikme (lag) oluşturur. Bunu engellemek için saniyede 
+                # maksimum 20 kere (0.05 sn) arayüzü güncelliyoruz. Veri kaybı olmaz, 
+                # sadece arayüz şişmez ve her zaman "GERÇEK ZAMANLI (0 MS)" akar.
+                if not hasattr(self, '_last_emit_time'):
+                    self._last_emit_time = 0
+                
+                current_time = time.time()
+                if current_time - self._last_emit_time >= 0.05: # Max 20 FPS
+                    self.state_bus.telemetry_updated.emit(data)
+                    self._last_emit_time = current_time
+
 
     def stop(self):
         self._running = False

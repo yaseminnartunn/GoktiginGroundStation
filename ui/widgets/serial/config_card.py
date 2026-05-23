@@ -56,10 +56,14 @@ class ConfigCard(QWidget):
         self._refresh_ports()
         btn_refresh = QPushButton("🔄"); btn_refresh.setFixedSize(38, 38); btn_refresh.setStyleSheet(f"QPushButton{{background:{C['bg_primary']}; color:{C['accent_cyan']}; border-radius:6px; font:16px;}} QPushButton:hover{{background:{C['bg_card']};}}")
         btn_refresh.clicked.connect(self._refresh_ports)
-        p_row = QHBoxLayout(); p_row.addWidget(self.combo_port, 1); p_row.addWidget(btn_refresh)
-        r1a.addLayout(self._field("PORT SEÇİMİ (AUTO-SCAN)", QWidget()), 1) # Placeholder layout
-        r1a.itemAt(r1a.count()-1).layout().addWidget(self.combo_port) # Fix layout later if needed
-        # Overwriting for better logic
+        port_container = QWidget()
+        p_row = QHBoxLayout(port_container)
+        p_row.setContentsMargins(0, 0, 0, 0)
+        p_row.addWidget(self.combo_port, 1)
+        p_row.addWidget(btn_refresh)
+        
+        r1a.addLayout(self._field("PORT SEÇİMİ (AUTO-SCAN)", port_container), 1)
+
         self.combo_baudrate = self._combo(["9600", "57600", "115200"], "9600")
         r1a.addLayout(self._field("BAUD HIZI", self.combo_baudrate), 1)
         r1a.addLayout(self._field("STOP BITS & PARITY", self._combo(["8N1", "8E1", "8O1", "7N1"], "8N1")), 1)
