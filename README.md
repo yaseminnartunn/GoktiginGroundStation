@@ -1,10 +1,11 @@
-# Yer‑stasyonuVer2
+# GoktiginGroundStation
 ## Teknofest 2026 – Orta İrtifa Roket Yarışması – Göktigin Roket Takımı
 
 ---
 
 ### 📖 Proje Özeti
-`Yer‑stasyonuVer2`, Göktigin Roket Takımı’nın **Teknofest 2026 Orta İrtifa Roket Yarışması**’nda kullanılmak üzere geliştirdiği, **tamamen Python/Qt5** tabanlı, görsel‑zengin bir **yer kontrol istasyonu**dur. Uçuş sırasında telemetri verilerini gerçek‑zamanlı olarak alır, grafiksel bir arayüzde gösterir ve veri kaydını yönetir.
+`GoktiginGroundStation
+`, Göktigin Roket Takımı’nın **Teknofest 2026 Orta İrtifa Roket Yarışması**’nda kullanılmak üzere geliştirdiği, **tamamen Python/Qt5** tabanlı, görsel‑zengin bir **yer kontrol istasyonu**dur. Uçuş sırasında telemetri verilerini gerçek‑zamanlı olarak alır, grafiksel bir arayüzde gösterir ve veri kaydını yönetir.
 **Not:** Uygulamayı başlatmak için giriş ekranında **kullanıcı adı:** `a` ve **şifre:** `a` (büyük/küçük harfe duyarlıdır) kullanılmalıdır.
 ---
 ### ✨ Öne Çıkan Özellikler
